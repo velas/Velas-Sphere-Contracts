@@ -61,12 +61,13 @@ contract VelasSphere {
 
     //Customer may want to increase the price to be first in list
     function proposePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
-        //Customer current = customers[msg.sender];
-        customers[msg.sender].pricing.keepPerByte = _keepPerByte;
-        customers[msg.sender].pricing.writePerByte = _writePerByte;
-        customers[msg.sender].pricing.GPUTPerCycle = _GPUTPerCycle;
-        customers[msg.sender].pricing.CPUTtPerCycle = _CPUTtPerCycle;
-        customers[msg.sender].pricing.isChanged = true;
+        //TODO maybe storage?
+        Customer current = customers[msg.sender];
+        current.pricing.keepPerByte = _keepPerByte;
+        current.pricing.writePerByte = _writePerByte;
+        current.pricing.GPUTPerCycle = _GPUTPerCycle;
+        current.pricing.CPUTtPerCycle = _CPUTtPerCycle;
+        current.pricing.isChanged = true;
     }
 
     function deposit() internal {
