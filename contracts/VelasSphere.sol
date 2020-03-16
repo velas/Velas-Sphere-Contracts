@@ -1,7 +1,6 @@
 //TODO
 // Make the upgradable contract
 // Impelemnt the voting for default Pricing
-// Implement priority of clients based of their pricing proposals
 // Implement invoice execution based of 2/3 of majority execution
 // Check how ofter the node inside the majority. in case when it is offline for long time exclude it. it losses membershipFee
 
@@ -11,6 +10,8 @@ contract VelasSphere {
     uint membershipFee = 100000000000;
     uint nodeCount;
     uint customerCount;
+    //TODO add grace period logic?
+    uint gracePeriod;
 
     struct Pricing {
         uint keepPerByte;
@@ -60,8 +61,6 @@ contract VelasSphere {
         customers[msg.sender].pricing.GPUTPerCycle = _GPUTPerCycle;
         customers[msg.sender].pricing.CPUTtPerCycle = _CPUTtPerCycle;
         customers[msg.sender].pricing.isChanged = true;
-
-        //TODO need to implement the sorting of customers to provide the priority list for resources;
     }
 
     function deposit() internal {
@@ -97,9 +96,28 @@ contract VelasSphere {
             //Node node = nodes[msg.sender];
             require(nodes[msg.sender].active);
             //TODO here need to implement the logic of node voting and result verification by 2/3 of voices
+            if (invoices[user].voices == 0) {
+               invoices[user].height_start = height_start;
+               invoices[user].height_end = height_end;
+               invoices[user].user = user;
+            }
+            //TODO check if invoice details are the same as previous
+            invoices[user].voices += 1;
 
-            //increase voices
-            //if there is enough voices - decrease customer balance and delete invoice
+            //TODO count minNodesVoices
+            uint minNodesVoices;
+            if (invoices[user].voices >= minNodesVoices) {
+                uint price;
+                //TODO calculate price
+                closeInvoice(user, price);
+            }
+    }
+
+    function closeInvoice(address user, uint price) internal {
+        //TODO what if balance < invoice?
+        customers[user].balance -= price;
+        delete invoices[user];
+
     }
 
     function getNextBitPosition() internal returns (uint) {
