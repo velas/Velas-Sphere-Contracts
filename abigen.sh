@@ -1,4 +1,4 @@
-FILES="VelasTest"
+FILES="VelasSphere"
 for f in $FILES
 do
 temp_file=$(mktemp)
