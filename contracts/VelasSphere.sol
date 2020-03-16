@@ -49,7 +49,7 @@ contract VelasSphere {
 
     struct Customer {
         Pricing pricing;
-        uint places; // bit positions
+        Location location;
         uint balance;
         bool registered;
     }
@@ -81,11 +81,14 @@ contract VelasSphere {
         customers[msg.sender].registered = true;
     }
 
-    //bit places
-    function depositWithNodes(uint _places) public payable {
+    //pull - user can define a specific pool. if he defines 0 then all pools
+    //_places - user can define a specific places in a pool. if 0 all places
+    function depositWithNodes(uint _pull, uint _places) public payable {
         deposit();
-        //Customer current = customers[msg.sender];
-        customers[msg.sender].places = _places;
+        Customer current = customers[msg.sender];
+        current.location.place = _places;
+        current.location.pull = _pull;
+        
     }
 
     struct Invoice {
@@ -135,19 +138,21 @@ contract VelasSphere {
     }
 
     function registerNode(address addr) public payable {
+        Node node = nodes[addr];
         //TODO need to check if it exists
-        require(nodes[addr].active == false);
-        nodes[addr].active = true;
+        require(node.active == false);
+        node.active = true;
         require(msg.value == membershipFee);
-        //TODO nodes[node].position - implement next bit position
-        nodes[addr].location.place = getNextBitPosition();
+        
+        node.location.pull = 0; //TODO. Increment pool when place is 95
+        node.location.place = getNextBitPosition();
         nodeCount += 1;
     }
 
     function withdraw(address payable addr) public {
-        //Node node = nodes[addr];
-        require(nodes[addr].balance > 0);
+        Node node = nodes[addr];
+        require(node.balance > 0);
         addr.transfer(nodes[addr].balance);
-        nodes[addr].balance = 0;
+        node.balance = 0;
     }
 }
