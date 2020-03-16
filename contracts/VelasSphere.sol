@@ -41,7 +41,6 @@ contract VelasSphere {
         address addr;
         uint balance;
         bool active;
-        uint generation; 
         Location location; 
     }
 
