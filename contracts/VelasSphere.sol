@@ -124,7 +124,8 @@ contract VelasSphere {
     }
 
     function closeInvoice(address user, uint price) internal {
-        //TODO what if balance < invoice?
+        //Nodes cannot work more than user requested
+        require(price <= customers[user].balance);
         customers[user].balance -= price;
         delete invoices[user];
 
