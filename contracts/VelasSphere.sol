@@ -30,12 +30,19 @@ contract VelasSphere {
         defaultPricing.CPUTtPerCycle = 1;
         defaultPricing.isChanged = false;
     }
+ 
+    struct Location {
+        uint pull; //Pull of 94 nodes joined together.
+        uint place; //One of 94 position in that generation. Once all of 94 positon is busy in current generation, so need to move to next generation
+    }
+
 
     struct Node {
         address addr;
         uint balance;
         bool active;
-        uint position; //bitwise position
+        uint generation; 
+        Location location; 
     }
 
     mapping(address => Node) nodes;
@@ -132,7 +139,7 @@ contract VelasSphere {
         nodes[addr].active = true;
         require(msg.value == membershipFee);
         //TODO nodes[node].position - implement next bit position
-        nodes[addr].position = getNextBitPosition();
+        nodes[addr].location.place = getNextBitPosition();
         nodeCount += 1;
     }
 
