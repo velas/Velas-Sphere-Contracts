@@ -49,7 +49,7 @@ contract VelasSphere {
 
     struct Customer {
         Pricing pricing;
-        uint positions; // bit positions
+        uint places; // bit positions
         uint balance;
         bool registered;
     }
@@ -81,11 +81,11 @@ contract VelasSphere {
         customers[msg.sender].registered = true;
     }
 
-    //bit positions
-    function depositWithNodes(uint _positions) public payable {
+    //bit places
+    function depositWithNodes(uint _places) public payable {
         deposit();
         //Customer current = customers[msg.sender];
-        customers[msg.sender].positions = _positions;
+        customers[msg.sender].places = _places;
     }
 
     struct Invoice {
@@ -128,6 +128,7 @@ contract VelasSphere {
     }
 
     function getNextBitPosition() internal returns (uint) {
+        //TODO need to calculate nodeCount based on current pool
         if (nodeCount > 94)
             return 0;
         return (1 << nodeCount);
