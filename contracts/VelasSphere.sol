@@ -32,7 +32,7 @@ contract VelasSphere {
     }
  
     struct Location {
-        uint pull; //Pull of 94 nodes joined together.
+        uint pool; //Pool of 94 nodes joined together.
         uint place; //One of 94 position in that generation. Once all of 94 positon is busy in current generation, so need to move to next generation
     }
 
