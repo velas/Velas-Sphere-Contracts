@@ -69,11 +69,10 @@ contract VelasSphere {
         require(msg.value > 0);
         customers[msg.sender].balance += msg.value;
         if (customers[msg.sender].registered == false) {
+        customers[msg.sender].pricing = defaultPricing;
             customerCount += 1;
         }
         customers[msg.sender].registered = true;
-        if (customers[msg.sender].pricing.isChanged == false)
-            customers[msg.sender].pricing = defaultPricing;
     }
 
     //bit positions
@@ -84,17 +83,23 @@ contract VelasSphere {
     }
 
     struct Invoice {
-        Pricing height_start;
-        Pricing height_end;
+        uint height_start;
+        uint height_end;
         address user;
         Pricing pricing;
+        uint voices;
     }
+
+    mapping(address => Invoice) invoices;
 
     //node sends the invoice to decrease the balance of the customer
     function createInvoice(uint height_start, uint height_end, address user, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) public  {
             //Node node = nodes[msg.sender];
             require(nodes[msg.sender].active);
             //TODO here need to implement the logic of node voting and result verification by 2/3 of voices
+
+            //increase voices
+            //if there is enough voices - decrease customer balance and delete invoice
     }
 
     function getNextBitPosition() internal returns (uint) {
