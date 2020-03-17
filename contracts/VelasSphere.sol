@@ -71,7 +71,6 @@ contract VelasSphere {
 
     //Customer may want to increase the price to be first in list
     function proposePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
-        //TODO maybe storage?
         Customer storage current = customers[msg.sender];
         current.pricing.keepPerByte = _keepPerByte;
         current.pricing.writePerByte = _writePerByte;
@@ -122,37 +121,39 @@ contract VelasSphere {
 
     //node sends the invoice to decrease the balance of the customer
     function createInvoice(uint height_start, uint height_end, address user, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) public  {
-            //Node node = nodes[msg.sender];
-            require(nodes[msg.sender].active);
+            Node storage node = nodes[msg.sender];
+            require(node.active);
             //check if node allowed to create invoice
-            if (customers[user].specificPool == true) {
-                require(customers[user].location.pool == nodes[msg.sender].location.pool);
+            Customer storage customer = customers[user];
+            if (customer.specificPool == true) {
+                require(customer.location.pool == node.location.pool);
             }
 
-            if (invoices[user].voices == 0) {
-               invoices[user].height_start = height_start;
-               invoices[user].height_end = height_end;
-               invoices[user].user = user;
-               invoices[user].used.keepPerByte = keepPerByte;
-               invoices[user].used.writePerByte = writePerByte;
-               invoices[user].used.GPUTPerCycle = GPUTPerCycle;
-               invoices[user].used.CPUTtPerCycle = CPUTtPerCycle;
+            Invoice storage invoice = invoices[user];
+            if (invoice.voices == 0) {
+               invoice.height_start = height_start;
+               invoice.height_end = height_end;
+               invoice.user = user;
+               invoice.used.keepPerByte = keepPerByte;
+               invoice.used.writePerByte = writePerByte;
+               invoice.used.GPUTPerCycle = GPUTPerCycle;
+               invoice.used.CPUTtPerCycle = CPUTtPerCycle;
             } else {
-               require(invoices[user].height_start == height_start);
-               require(invoices[user].height_end == height_end);
-               require(invoices[user].used.keepPerByte == keepPerByte);
-               require(invoices[user].used.writePerByte == writePerByte);
-               require(invoices[user].used.GPUTPerCycle == GPUTPerCycle);
-               require(invoices[user].used.CPUTtPerCycle == CPUTtPerCycle);
+               require(invoice.height_start == height_start);
+               require(invoice.height_end == height_end);
+               require(invoice.used.keepPerByte == keepPerByte);
+               require(invoice.used.writePerByte == writePerByte);
+               require(invoice.used.GPUTPerCycle == GPUTPerCycle);
+               require(invoice.used.CPUTtPerCycle == CPUTtPerCycle);
             }
 
-            invoices[user].voices += 1;
+            invoice.voices += 1;
             uint price;
-            price = calculatePrice(customers[user].pricing, keepPerByte, writePerByte, GPUTPerCycle, CPUTtPerCycle);
+            price = calculatePrice(customer.pricing, keepPerByte, writePerByte, GPUTPerCycle, CPUTtPerCycle);
 
             //check if the grace period has past
             if (block.number >= height_end + gracePeriod) {
-                if (invoices[user].voices >= minNodesVoices) {
+                if (invoice.voices >= minNodesVoices) {
                 closeInvoice(user, price);
                 return;
             }
@@ -162,7 +163,7 @@ contract VelasSphere {
 
             }
             // invoice has 100% of voices before grace period
-            if (invoices[user].voices == 94) {
+            if (invoice.voices == 94) {
                 closeInvoice(user, price);
             }
     }
@@ -184,13 +185,14 @@ contract VelasSphere {
     }
 
     function getNextBitPosition() internal returns (uint) {
-        if (pools[poolCount].nodeCount >= 94) {
+        Pool storage pool = pools[poolCount];
+        if (pool.nodeCount >= 94) {
                poolCount += 1;
         }
 
         uint position;
-            position = 1 << pools[poolCount].nodeCount;
-            pools[poolCount].nodeCount += 1;
+            position = 1 << pool.nodeCount;
+            pool.nodeCount += 1;
            return position;
 
     }
