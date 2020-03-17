@@ -71,6 +71,7 @@ contract VelasSphere {
 
     //Customer may want to increase the price to be first in list
     function proposePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
+        //TODO maybe storage?
         Customer storage current = customers[msg.sender];
         current.pricing.keepPerByte = _keepPerByte;
         current.pricing.writePerByte = _writePerByte;
@@ -146,12 +147,12 @@ contract VelasSphere {
             }
 
             invoices[user].voices += 1;
+            uint price;
+            price = calculatePrice(customers[user].pricing, keepPerByte, writePerByte, GPUTPerCycle, CPUTtPerCycle);
 
             //check if the grace period has past
             if (block.number >= height_end + gracePeriod) {
                 if (invoices[user].voices >= minNodesVoices) {
-                uint price;
-                //TODO calculate price
                 closeInvoice(user, price);
                 return;
             }
@@ -162,10 +163,17 @@ contract VelasSphere {
             }
             // invoice has 100% of voices before grace period
             if (invoices[user].voices == 94) {
-                uint price;
-                //TODO calculate price
                 closeInvoice(user, price);
             }
+    }
+
+    function calculatePrice(Pricing storage pricing, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) internal returns (uint) {
+        uint price;
+        price += pricing.keepPerByte * keepPerByte;
+        price += pricing.writePerByte * writePerByte;
+        price += pricing.CPUTtPerCycle * CPUTtPerCycle;
+        price += pricing.GPUTPerCycle * GPUTPerCycle;
+        return price;
     }
 
     function closeInvoice(address user, uint price) internal {
