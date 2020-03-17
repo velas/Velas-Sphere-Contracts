@@ -11,6 +11,7 @@ contract VelasSphere {
     uint nodeCount;
     uint minNodesVoices;
     uint customerCount;
+    uint poolCount;
 
     struct Pricing {
         uint keepPerByte;
@@ -37,6 +38,13 @@ contract VelasSphere {
         uint place; //One of 94 position in that generation. Once all of 94 positon is busy in current generation, so need to move to next generation
     }
 
+    struct Pool {
+        uint poolID; // number of pool
+        uint NodeCount;
+    }
+
+    mapping (uint => Pool) pools;
+
     struct Node {
         address addr;
         uint balance;
@@ -61,6 +69,7 @@ contract VelasSphere {
 
     //Customer may want to increase the price to be first in list
     function proposePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
+        //TODO maybe storage?
         Customer storage current = customers[msg.sender];
         current.pricing.keepPerByte = _keepPerByte;
         current.pricing.writePerByte = _writePerByte;
@@ -87,7 +96,6 @@ contract VelasSphere {
         Customer storage current = customers[msg.sender];
         current.location.place = _places;
         current.location.pool = _pull;
-
     }
 
     struct Invoice {
@@ -137,10 +145,11 @@ contract VelasSphere {
     }
 
     function getNextBitPosition() internal returns (uint) {
-        //TODO need to calculate nodeCount based on current pool
-        if (nodeCount > 94)
-            return 0;
-        return (1 << nodeCount);
+        uint position;
+            position = 1 << pools[poolCount].nodeCount;
+            pools[poolCount].nodeCount += 1;
+           return position;
+
     }
 
     function registerNode(address addr) public payable {
@@ -150,8 +159,9 @@ contract VelasSphere {
         node.active = true;
         require(msg.value == membershipFee);
 
-        node.location.pool = 0; //TODO. Increment pool when place is 95
         node.location.place = getNextBitPosition();
+        node.location.pool = poolCount;
+
         nodeCount += 1;
     }
 
