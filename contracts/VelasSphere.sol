@@ -94,6 +94,10 @@ contract VelasSphere {
     //_places - user can define a specific places in a pool. if 0 all places
     function depositWithNodes(uint _pull, uint _places) public payable {
         deposit();
+        changePool(_pull, _places);
+    }
+
+    function changePool(uint _pull, uint _places) public {
         Customer storage current = customers[msg.sender];
         current.location.place = _places;
         current.location.pool = _pull;
