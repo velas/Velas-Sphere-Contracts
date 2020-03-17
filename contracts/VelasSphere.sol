@@ -1,13 +1,13 @@
-//TODO
+//TODO general
 // Make the upgradable contract
-// Impelemnt the voting for default Pricing
-// Implement invoice execution based of 2/3 of majority execution
 // Check how ofter the node inside the majority. in case when it is offline for long time exclude it. it losses membershipFee
 
 pragma solidity >=0.4.22 <0.6.0;
 
 contract VelasSphere {
     uint membershipFee = 100000000000;
+    // maybe temporary
+    uint gracePeriod = 50;
     uint nodeCount;
     uint minNodesVoices;
     uint customerCount;
@@ -106,7 +106,6 @@ contract VelasSphere {
         uint height_end;
         address user;
         Pricing pricing;
-        uint gracePeriod;
         uint price;
         uint voices;
     }
@@ -127,22 +126,21 @@ contract VelasSphere {
                invoices[user].height_start = height_start;
                invoices[user].height_end = height_end;
                invoices[user].user = user;
-               invoices[user].gracePeriod = height_end - height_start;
             }
             //TODO check if invoice details are the same as previous
-            uint nodeGrace;
-            nodeGrace = height_end - height_start;
-            if (nodeGrace > invoices[user].gracePeriod) {
-                return;
-            }
+
 
             invoices[user].voices += 1;
+            //if 100% node - close
 
+            // if gracePeriod
             if (invoices[user].voices >= minNodesVoices) {
                 uint price;
                 //TODO calculate price
                 closeInvoice(user, price);
             }
+
+            //if gracePeriod expires - not valide. Delete invoice without charge
     }
 
     function closeInvoice(address user, uint price) internal {
