@@ -71,7 +71,6 @@ contract VelasSphere {
 
     //Customer may want to increase the price to be first in list
     function proposePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
-        //TODO maybe storage?
         Customer storage current = customers[msg.sender];
         current.pricing.keepPerByte = _keepPerByte;
         current.pricing.writePerByte = _writePerByte;
@@ -106,8 +105,16 @@ contract VelasSphere {
         uint height_end;
         address user;
         Pricing pricing;
+        Resources used;
         uint price;
         uint voices;
+    }
+
+    struct Resources {
+        uint keepPerByte;
+        uint writePerByte;
+        uint GPUTPerCycle;
+        uint CPUTtPerCycle;
     }
 
     mapping(address => Invoice) invoices;
@@ -121,26 +128,44 @@ contract VelasSphere {
                 require(customers[user].location.pool == nodes[msg.sender].location.pool);
             }
 
-            //voting and result verification by 2/3 of voices
             if (invoices[user].voices == 0) {
                invoices[user].height_start = height_start;
                invoices[user].height_end = height_end;
                invoices[user].user = user;
+               invoices[user].used.keepPerByte = keepPerByte;
+               invoices[user].used.writePerByte = writePerByte;
+               invoices[user].used.GPUTPerCycle = GPUTPerCycle;
+               invoices[user].used.CPUTtPerCycle = CPUTtPerCycle;
+            } else {
+               require(invoices[user].height_start == height_start);
+               require(invoices[user].height_end == height_end);
+               require(invoices[user].used.keepPerByte == keepPerByte);
+               require(invoices[user].used.writePerByte == writePerByte);
+               require(invoices[user].used.GPUTPerCycle == GPUTPerCycle);
+               require(invoices[user].used.CPUTtPerCycle == CPUTtPerCycle);
             }
-            //TODO check if invoice details are the same as previous
-
 
             invoices[user].voices += 1;
-            //if 100% node - close
 
-            // if gracePeriod
-            if (invoices[user].voices >= minNodesVoices) {
+            //check if the grace period has past
+            if (block.number >= height_end + gracePeriod) {
+                if (invoices[user].voices >= minNodesVoices) {
+                uint price;
+                //TODO calculate price
+                closeInvoice(user, price);
+                return;
+            }
+                //grace period past, but there is not enough voices. Invoice is invalid
+                delete invoices[user];
+                return;
+
+            }
+            // invoice has 100% of voices before grace period
+            if (invoices[user].voices == 94) {
                 uint price;
                 //TODO calculate price
                 closeInvoice(user, price);
             }
-
-            //if gracePeriod expires - not valide. Delete invoice without charge
     }
 
     function closeInvoice(address user, uint price) internal {
