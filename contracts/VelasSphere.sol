@@ -40,7 +40,7 @@ contract VelasSphere {
 
     struct Pool {
         uint poolID; // number of pool
-        uint NodeCount;
+        uint nodeCount;
     }
 
     mapping (uint => Pool) pools;
@@ -56,6 +56,8 @@ contract VelasSphere {
 
     struct Customer {
         Pricing pricing;
+        // customer choose which pool can create invoices
+        bool specificPool;
         Location location;
         uint balance;
         bool registered;
@@ -96,7 +98,7 @@ contract VelasSphere {
         Customer storage current = customers[msg.sender];
         current.location.place = _places;
         current.location.pool = _pull;
-
+        current.specificPool = true;
     }
 
     struct Invoice {
@@ -115,6 +117,11 @@ contract VelasSphere {
     function createInvoice(uint height_start, uint height_end, address user, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) public  {
             //Node node = nodes[msg.sender];
             require(nodes[msg.sender].active);
+            //check if node allowed to create invoice
+            if (customers[user].specificPool == true) {
+                require(customers[user].location.pool == nodes[msg.sender].location.pool);
+            }
+
             //voting and result verification by 2/3 of voices
             if (invoices[user].voices == 0) {
                invoices[user].height_start = height_start;
@@ -146,7 +153,7 @@ contract VelasSphere {
     }
 
     function getNextBitPosition() internal returns (uint) {
-        if pools[poolCount].nodeCount >= 94 {
+        if (pools[poolCount].nodeCount >= 94) {
                poolCount += 1;
         }
 
