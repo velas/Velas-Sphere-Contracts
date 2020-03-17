@@ -96,6 +96,7 @@ contract VelasSphere {
         Customer storage current = customers[msg.sender];
         current.location.place = _places;
         current.location.pool = _pull;
+
     }
 
     struct Invoice {
@@ -145,6 +146,10 @@ contract VelasSphere {
     }
 
     function getNextBitPosition() internal returns (uint) {
+        if pools[poolCount].nodeCount >= 94 {
+               poolCount += 1;
+        }
+
         uint position;
             position = 1 << pools[poolCount].nodeCount;
             pools[poolCount].nodeCount += 1;
