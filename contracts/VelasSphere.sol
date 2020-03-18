@@ -80,14 +80,14 @@ contract VelasSphere {
     }
 
     function deposit() internal {
-        //Customer current = customers[msg.sender];
+        Customer storage current = customers[msg.sender];
         require(msg.value > 0);
-        customers[msg.sender].balance += msg.value;
-        if (customers[msg.sender].registered == false) {
-        customers[msg.sender].pricing = defaultPricing;
+        current.balance += msg.value;
+        if (current.registered == false) {
+        current.pricing = defaultPricing;
             customerCount += 1;
         }
-        customers[msg.sender].registered = true;
+        current.registered = true;
     }
 
     //pull - user can define a specific pool. if he defines 0 then all pools
@@ -219,5 +219,55 @@ contract VelasSphere {
         require(node.balance > 0);
         addr.transfer(nodes[addr].balance);
         node.balance = 0;
+    }
+
+    struct PricePropose {
+        address proposer;
+        Pricing pricing;
+        uint votes;
+        uint height_start;
+    }
+
+    mapping (address => PricePropose) proposes;
+
+    function createPricePropose(uint _height_start, uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
+        //TODO validate _height_start ?
+        PricePropose storage propose = proposes[msg.sender];
+        //one propose for one address
+        require(propose.votes == 0);
+        //TODO check if node wasn't banned
+
+        propose.pricing.keepPerByte = _keepPerByte;
+        propose.pricing.writePerByte = _writePerByte;
+        propose.pricing.GPUTPerCycle = _GPUTPerCycle;
+        propose.pricing.CPUTtPerCycle = _CPUTtPerCycle;
+        propose.height_start = _height_start;
+        propose.votes +=1;
+    }
+
+    function voteForPrice(address priceProposer) public {
+        require(msg.sender != priceProposer);
+        PricePropose storage propose = proposes[priceProposer];
+        //check if propose exists
+        require(propose.votes == 0);
+        //check gracePeriod for voting
+        propose.votes +=1;
+
+         if (block.number >= propose.height_start + gracePeriod) {
+             uint _minNodesVoices;
+            //TODO caculate _minNodesVoices
+                if (propose.votes >= _minNodesVoices) {
+                //TODO change default price
+                return;
+            }
+                //TODO check if there was less then 1/3 of voices - ban proposer
+                delete proposes[priceProposer];
+                return;
+
+            }
+            // propose has 100% of voices before grace period
+            if (propose.votes == nodeCount) {
+            //TODO change default price
+            }
     }
 }
