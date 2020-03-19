@@ -49,6 +49,7 @@ contract VelasSphere {
         address addr;
         uint balance;
         bool active;
+        Pricing pricing;
         Location location;
     }
 
@@ -80,20 +81,23 @@ contract VelasSphere {
     }
 
     function deposit() internal {
-        //Customer current = customers[msg.sender];
+        Customer storage current = customers[msg.sender];
         require(msg.value > 0);
-        customers[msg.sender].balance += msg.value;
-        if (customers[msg.sender].registered == false) {
-            customers[msg.sender].pricing = defaultPricing;
+        current.balance += msg.value;
+        if (current.registered == false) {
+            current.pricing = defaultPricing;
             customerCount += 1;
         }
-        customers[msg.sender].registered = true;
+        current.registered = true;
     }
 
     //pull - user can define a specific pool. if he defines 0 then all pools
     //_places - user can define a specific places in a pool. if 0 all places
     function depositWithNodes(uint _pull, uint _places) public payable {
         deposit();
+        if (_pull == 0 && _places == 0) {
+            return;
+        }
         changePool(_pull, _places);
     }
 
@@ -201,7 +205,7 @@ contract VelasSphere {
 
     }
 
-    function registerNode(address addr) public payable {
+    function registerNode(address addr, uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public payable {
         Node storage node = nodes[addr];
         //TODO need to check if it exists
         require(node.active == false);
@@ -210,8 +214,21 @@ contract VelasSphere {
 
         node.location.place = getNextBitPosition();
         node.location.pool = poolCount;
+        node.pricing.keepPerByte = _keepPerByte;
+        node.pricing.writePerByte = _writePerByte;
+        node.pricing.GPUTPerCycle = _GPUTPerCycle;
+        node.pricing.CPUTtPerCycle = _CPUTtPerCycle;
 
         nodeCount += 1;
+    }
+
+    function changeNodePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
+        Node storage node = nodes[msg.sender];
+        require(node.active == true);
+        node.pricing.keepPerByte = _keepPerByte;
+        node.pricing.writePerByte = _writePerByte;
+        node.pricing.GPUTPerCycle = _GPUTPerCycle;
+        node.pricing.CPUTtPerCycle = _CPUTtPerCycle;
     }
 
     function withdraw(address payable addr) public {
@@ -220,4 +237,5 @@ contract VelasSphere {
         addr.transfer(nodes[addr].balance);
         node.balance = 0;
     }
+    //TODO add node banning for customer
 }

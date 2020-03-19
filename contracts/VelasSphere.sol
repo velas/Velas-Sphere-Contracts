@@ -49,6 +49,7 @@ contract VelasSphere {
         address addr;
         uint balance;
         bool active;
+        Pricing pricing;
         Location location;
     }
 
@@ -94,6 +95,9 @@ contract VelasSphere {
     //_places - user can define a specific places in a pool. if 0 all places
     function depositWithNodes(uint _pull, uint _places) public payable {
         deposit();
+        if (_pull == 0 && _places == 0) {
+            return;
+        }
         changePool(_pull, _places);
     }
 
@@ -201,7 +205,7 @@ contract VelasSphere {
 
     }
 
-    function registerNode(address addr) public payable {
+    function registerNode(address addr, uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public payable {
         Node storage node = nodes[addr];
         //TODO need to check if it exists
         require(node.active == false);
@@ -210,8 +214,21 @@ contract VelasSphere {
 
         node.location.place = getNextBitPosition();
         node.location.pool = poolCount;
+        node.pricing.keepPerByte = _keepPerByte;
+        node.pricing.writePerByte = _writePerByte;
+        node.pricing.GPUTPerCycle = _GPUTPerCycle;
+        node.pricing.CPUTtPerCycle = _CPUTtPerCycle;
 
         nodeCount += 1;
+    }
+
+    function changeNodePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
+        Node storage node = nodes[msg.sender];
+        require(node.active == true);
+        node.pricing.keepPerByte = _keepPerByte;
+        node.pricing.writePerByte = _writePerByte;
+        node.pricing.GPUTPerCycle = _GPUTPerCycle;
+        node.pricing.CPUTtPerCycle = _CPUTtPerCycle;
     }
 
     function withdraw(address payable addr) public {
@@ -220,54 +237,5 @@ contract VelasSphere {
         addr.transfer(nodes[addr].balance);
         node.balance = 0;
     }
-
-    struct PricePropose {
-        address proposer;
-        Pricing pricing;
-        uint votes;
-        uint height_start;
-    }
-
-    mapping (address => PricePropose) proposes;
-
-    function createPricePropose(uint _height_start, uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
-        //TODO validate _height_start ?
-        PricePropose storage propose = proposes[msg.sender];
-        //one propose for one address
-        require(propose.votes == 0);
-        //TODO check if node wasn't banned
-
-        propose.pricing.keepPerByte = _keepPerByte;
-        propose.pricing.writePerByte = _writePerByte;
-        propose.pricing.GPUTPerCycle = _GPUTPerCycle;
-        propose.pricing.CPUTtPerCycle = _CPUTtPerCycle;
-        propose.height_start = _height_start;
-        propose.votes +=1;
-    }
-
-    function voteForPrice(address priceProposer) public {
-        require(msg.sender != priceProposer);
-        PricePropose storage propose = proposes[priceProposer];
-        //check if propose exists
-        require(propose.votes == 0);
-        //check gracePeriod for voting
-        propose.votes +=1;
-
-         if (block.number >= propose.height_start + gracePeriod) {
-             uint _minNodesVoices;
-            //TODO caculate _minNodesVoices
-                if (propose.votes >= _minNodesVoices) {
-                //TODO change default price
-                return;
-            }
-                //TODO check if there was less then 1/3 of voices - ban proposer
-                delete proposes[priceProposer];
-                return;
-
-            }
-            // propose has 100% of voices before grace period
-            if (propose.votes == nodeCount) {
-            //TODO change default price
-            }
-    }
+    //TODO add node banning for customer
 }
