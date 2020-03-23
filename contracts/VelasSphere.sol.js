@@ -49,6 +49,7 @@ contract VelasSphere {
         address addr;
         uint balance;
         bool active;
+        bool banned;
         Pricing pricing;
         Location location;
     }
@@ -62,12 +63,18 @@ contract VelasSphere {
         Location location;
         uint balance;
         bool registered;
+        mapping(address => Node) banned;
     }
 
     mapping(address => Customer) customers;
 
     function() external payable {
         deposit();
+    }
+
+    function banNode(address _node) public {
+        Customer storage current = customers[msg.sender];
+        current.banned[_node].banned = true;
     }
 
     //Customer may want to increase the price to be first in list
@@ -131,48 +138,33 @@ contract VelasSphere {
     function createInvoice(uint height_start, uint height_end, address user, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) public  {
         Node storage node = nodes[msg.sender];
         require(node.active);
-        //check if node allowed to create invoice
         Customer storage customer = customers[user];
-        if (customer.specificPool == true) {
-            require(customer.location.pool == node.location.pool);
-        }
+        require(customer.banned[node.addr].banned != true);
 
         Invoice storage invoice = invoices[user];
         if (invoice.voices == 0) {
-            invoice.height_start = height_start;
-            invoice.height_end = height_end;
             invoice.user = user;
-            invoice.used.keepPerByte = keepPerByte;
-            invoice.used.writePerByte = writePerByte;
-            invoice.used.GPUTPerCycle = GPUTPerCycle;
-            invoice.used.CPUTtPerCycle = CPUTtPerCycle;
-        } else {
-            require(invoice.height_start == height_start);
-            require(invoice.height_end == height_end);
-            require(invoice.used.keepPerByte == keepPerByte);
-            require(invoice.used.writePerByte == writePerByte);
-            require(invoice.used.GPUTPerCycle == GPUTPerCycle);
-            require(invoice.used.CPUTtPerCycle == CPUTtPerCycle);
         }
+        invoice.used.keepPerByte += keepPerByte;
+        invoice.used.writePerByte += writePerByte;
+        invoice.used.GPUTPerCycle += GPUTPerCycle;
+        invoice.used.CPUTtPerCycle += CPUTtPerCycle;
 
         invoice.voices += 1;
         uint price;
         price = calculatePrice(customer.pricing, keepPerByte, writePerByte, GPUTPerCycle, CPUTtPerCycle);
+        invoice.price += price;
 
         //check if the grace period has past
         if (block.number >= height_end + gracePeriod) {
             if (invoice.voices >= minNodesVoices) {
-                closeInvoice(user, price);
+                closeInvoice(user, invoice.price);
                 return;
             }
             //grace period past, but there is not enough voices. Invoice is invalid
             delete invoices[user];
             return;
 
-        }
-        // invoice has 100% of voices before grace period
-        if (invoice.voices == 94) {
-            closeInvoice(user, price);
         }
     }
 
@@ -237,5 +229,4 @@ contract VelasSphere {
         addr.transfer(nodes[addr].balance);
         node.balance = 0;
     }
-    //TODO add node banning for customer
 }
