@@ -12,6 +12,8 @@ contract VelasSphere {
     uint minNodesVoices;
     uint customerCount;
     uint poolCount;
+    //TODO is it enough?
+    uint votesToBanPermanently = 5;
 
     struct Pricing {
         uint keepPerByte;
@@ -49,12 +51,17 @@ contract VelasSphere {
         address addr;
         uint balance;
         bool active;
-        bool banned;
         Pricing pricing;
         Location location;
     }
 
+    struct NodeToBan {
+        address addr;
+        uint votes;
+    }
+
     mapping(address => Node) nodes;
+    mapping(address => NodeToBan) banned;
 
     struct Customer {
         Pricing pricing;
@@ -63,7 +70,7 @@ contract VelasSphere {
         Location location;
         uint balance;
         bool registered;
-        mapping(address => Node) banned;
+        mapping(address => NodeToBan) banned;
     }
 
     mapping(address => Customer) customers;
@@ -74,7 +81,13 @@ contract VelasSphere {
 
     function banNode(address _node) public {
         Customer storage current = customers[msg.sender];
-        current.banned[_node].banned = true;
+        //it's enough in this customer's map
+        current.banned[_node].votes = 1;
+        banned[_node].votes += 1;
+
+        if (banned[_node].votes == votesToBanPermanently) {
+            //TODO ban permanently
+        }
     }
 
     //Customer may want to increase the price to be first in list
@@ -118,6 +131,8 @@ contract VelasSphere {
     struct Invoice {
         uint height_start;
         uint height_end;
+        uint deadline;
+        bool isOpened;
         address user;
         Pricing pricing;
         Resources used;
@@ -134,17 +149,29 @@ contract VelasSphere {
 
     mapping(address => Invoice) invoices;
 
+    function openInvoice(address addr, uint deadline) public {
+        //TODO check customer
+        require(addr == msg.sender);
+        Invoice storage invoice = invoices[addr];
+        //TODO must be new?
+        require(invoice.voices == 0);
+        invoice.deadline = deadline;
+        invoice.isOpened = true;
+    }
+
     //node sends the invoice to decrease the balance of the customer
     function createInvoice(uint height_start, uint height_end, address user, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) public  {
         Node storage node = nodes[msg.sender];
         require(node.active);
+        //TODO check if node was permanently banned
+        require(banned[node.addr].votes < votesToBanPermanently);
         Customer storage customer = customers[user];
-        require(customer.banned[node.addr].banned != true);
+        //check if user banned node
+        require(customer.banned[node.addr].votes == 0);
 
         Invoice storage invoice = invoices[user];
-        if (invoice.voices == 0) {
-            invoice.user = user;
-        }
+        require(invoice.isOpened);
+        require(invoice.deadline >= block.number);
         invoice.used.keepPerByte += keepPerByte;
         invoice.used.writePerByte += writePerByte;
         invoice.used.GPUTPerCycle += GPUTPerCycle;

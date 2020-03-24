@@ -131,6 +131,8 @@ contract VelasSphere {
     struct Invoice {
         uint height_start;
         uint height_end;
+        uint deadline;
+        bool isOpened;
         address user;
         Pricing pricing;
         Resources used;
@@ -147,6 +149,16 @@ contract VelasSphere {
 
     mapping(address => Invoice) invoices;
 
+    function openInvoice(address addr, uint deadline) public {
+        //TODO check customer
+        require(addr == msg.sender);
+        Invoice storage invoice = invoices[addr];
+        //TODO must be new?
+        require(invoice.voices == 0);
+        invoice.deadline = deadline;
+        invoice.isOpened = true;
+    }
+
     //node sends the invoice to decrease the balance of the customer
     function createInvoice(uint height_start, uint height_end, address user, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) public  {
             Node storage node = nodes[msg.sender];
@@ -158,9 +170,8 @@ contract VelasSphere {
             require(customer.banned[node.addr].votes == 0);
 
             Invoice storage invoice = invoices[user];
-            if (invoice.voices == 0) {
-               invoice.user = user;
-            }
+             require(invoice.isOpened);
+             require(invoice.deadline >= block.number);
              invoice.used.keepPerByte += keepPerByte;
              invoice.used.writePerByte += writePerByte;
              invoice.used.GPUTPerCycle += GPUTPerCycle;
