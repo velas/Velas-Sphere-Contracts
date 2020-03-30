@@ -48,7 +48,8 @@ contract VelasSphere {
     mapping (uint => Pool) pools;
 
     struct Node {
-        address addr;
+        address payable staking_addr;
+        address mining_addr;
         uint balance;
         bool active;
         Pricing pricing;
@@ -164,10 +165,10 @@ contract VelasSphere {
         Node storage node = nodes[msg.sender];
         require(node.active);
         //TODO check if node was permanently banned
-        require(banned[node.addr].votes < votesToBanPermanently);
+        require(banned[node.staking_addr].votes < votesToBanPermanently);
         Customer storage customer = customers[user];
         //check if user banned node
-        require(customer.banned[node.addr].votes == 0);
+        require(customer.banned[node.staking_addr].votes == 0);
 
         Invoice storage invoice = invoices[user];
         require(invoice.isOpened);
@@ -224,13 +225,14 @@ contract VelasSphere {
 
     }
 
-    function registerNode(address addr, uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public payable {
-        Node storage node = nodes[addr];
+    function registerNode(address payable staking_addr, address mining_addr, uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public payable {
+        Node storage node = nodes[mining_addr];
         //TODO need to check if it exists
         require(node.active == false);
         node.active = true;
         require(msg.value == membershipFee);
 
+        node.staking_addr = staking_addr;
         node.location.place = getNextBitPosition();
         node.location.pool = poolCount;
         node.pricing.keepPerByte = _keepPerByte;
@@ -251,9 +253,16 @@ contract VelasSphere {
     }
 
     function withdraw(address payable addr) public {
+        //TODO check staking signature
         Node storage node = nodes[addr];
         require(node.balance > 0);
-        addr.transfer(nodes[addr].balance);
+        node.staking_addr.transfer(nodes[addr].balance);
         node.balance = 0;
+    }
+
+    function changeMiningAddr(address old_addr, address new_addr) public {
+        //TODO check staking signature
+        Node storage node = nodes[old_addr];
+        node.mining_addr = new_addr;
     }
 }
