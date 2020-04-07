@@ -80,7 +80,7 @@ contract VelasSphere {
         deposit();
     }
 
-    function banNode(address _node) public {
+    function banNode(address _node) external {
          Customer storage current = customers[msg.sender];
          //it's enough in this customer's map
          current.banned[_node].votes = 1;
@@ -92,7 +92,7 @@ contract VelasSphere {
     }
 
     //Customer may want to increase the price to be first in list
-    function proposePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
+    function proposePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) external {
         Customer storage current = customers[msg.sender];
         current.pricing.keepPerByte = _keepPerByte;
         current.pricing.writePerByte = _writePerByte;
@@ -114,7 +114,7 @@ contract VelasSphere {
 
     //pull - user can define a specific pool. if he defines 0 then all pools
     //_places - user can define a specific places in a pool. if 0 all places
-    function depositWithNodes(uint _pull, uint _places) public payable {
+    function depositWithNodes(uint _pull, uint _places) external payable {
         deposit();
         if (_pull == 0 && _places == 0) {
             return;
@@ -150,7 +150,7 @@ contract VelasSphere {
 
     mapping(address => Invoice) invoices;
 
-    function openInvoice(address addr, uint deadline) public {
+    function openInvoice(address addr, uint deadline) external {
         //TODO check customer
         require(addr == msg.sender);
         Invoice storage invoice = invoices[addr];
@@ -161,7 +161,7 @@ contract VelasSphere {
     }
 
     //node sends the invoice to decrease the balance of the customer
-    function createInvoice(uint height_start, uint height_end, address user, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) public  {
+    function createInvoice(uint height_start, uint height_end, address user, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) external  {
             Node storage node = nodes[msg.sender];
             require(node.active);
             //TODO check if node was permanently banned
@@ -225,7 +225,7 @@ contract VelasSphere {
 
     }
 
-    function registerNode(address payable staking_addr, address mining_addr, uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public payable {
+    function registerNode(address payable staking_addr, address mining_addr, uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) external payable {
         Node storage node = nodes[mining_addr];
         //TODO need to check if it exists
         require(node.active == false);
@@ -243,7 +243,7 @@ contract VelasSphere {
         nodeCount += 1;
     }
 
-    function changeNodePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) public {
+    function changeNodePricing(uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) external {
         Node storage node = nodes[msg.sender];
         require(node.active == true);
         node.pricing.keepPerByte = _keepPerByte;
@@ -252,7 +252,7 @@ contract VelasSphere {
         node.pricing.CPUTtPerCycle = _CPUTtPerCycle;
     }
 
-    function withdraw(address payable addr) public {
+    function withdraw(address payable addr) external {
         //TODO check staking signature
         Node storage node = nodes[addr];
         require(node.balance > 0);
@@ -260,7 +260,7 @@ contract VelasSphere {
         node.balance = 0;
     }
 
-    function changeMiningAddr(address old_addr, address new_addr) public {
+    function changeMiningAddr(address old_addr, address new_addr) external {
         //TODO check staking signature
         Node storage node = nodes[old_addr];
         node.mining_addr = new_addr;
