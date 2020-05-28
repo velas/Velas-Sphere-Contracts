@@ -161,7 +161,7 @@ contract VelasSphere {
     }
 
     //node sends the invoice to decrease the balance of the customer
-    function createInvoice(uint height_start, uint height_end, address user, uint price) external  {
+    function createInvoice(address user, uint price) external  {
             Node storage node = nodes[msg.sender];
             require(node.active);
             //TODO check if node was permanently banned
@@ -172,22 +172,9 @@ contract VelasSphere {
 
             Invoice storage invoice = invoices[user];
             require(invoice.isOpened);
-            require(invoice.deadline >= block.number);
 
             invoice.voices += 1;
             invoice.price += price;
-
-            //check if the grace period has past
-            if (block.number >= height_end + gracePeriod) {
-                if (invoice.voices >= minNodesVoices) {
-                closeInvoice(user, invoice.price);
-                return;
-            }
-                //grace period past, but there is not enough voices. Invoice is invalid
-                delete invoices[user];
-                return;
-
-            }
     }
 
     function calculatePrice(Pricing storage pricing, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) internal returns (uint) {
