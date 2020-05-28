@@ -161,7 +161,7 @@ contract VelasSphere {
     }
 
     //node sends the invoice to decrease the balance of the customer
-    function createInvoice(uint height_start, uint height_end, address user, uint keepPerByte, uint writePerByte, uint GPUTPerCycle, uint CPUTtPerCycle) external  {
+    function createInvoice(uint height_start, uint height_end, address user, uint price) external  {
             Node storage node = nodes[msg.sender];
             require(node.active);
             //TODO check if node was permanently banned
@@ -171,16 +171,10 @@ contract VelasSphere {
             require(customer.banned[node.staking_addr].votes == 0);
 
             Invoice storage invoice = invoices[user];
-             require(invoice.isOpened);
-             require(invoice.deadline >= block.number);
-             invoice.used.keepPerByte += keepPerByte;
-             invoice.used.writePerByte += writePerByte;
-             invoice.used.GPUTPerCycle += GPUTPerCycle;
-             invoice.used.CPUTtPerCycle += CPUTtPerCycle;
+            require(invoice.isOpened);
+            require(invoice.deadline >= block.number);
 
             invoice.voices += 1;
-            uint price;
-            price = calculatePrice(customer.pricing, keepPerByte, writePerByte, GPUTPerCycle, CPUTtPerCycle);
             invoice.price += price;
 
             //check if the grace period has past
@@ -225,7 +219,11 @@ contract VelasSphere {
 
     }
 
-    function registerNode(address payable staking_addr, address mining_addr, uint _keepPerByte, uint _writePerByte, uint _GPUTPerCycle, uint _CPUTtPerCycle) external payable {
+    function isRegistered(address mining_addr) internal returns (bool) {
+        return nodes[mining_addr].active;
+    }
+
+    function registerNode(address payable staking_addr, address mining_addr) external payable {
         Node storage node = nodes[mining_addr];
         //TODO need to check if it exists
         require(node.active == false);
@@ -235,10 +233,6 @@ contract VelasSphere {
         node.staking_addr = staking_addr;
         node.location.place = getNextBitPosition();
         node.location.pool = poolCount;
-        node.pricing.keepPerByte = _keepPerByte;
-        node.pricing.writePerByte = _writePerByte;
-        node.pricing.GPUTPerCycle = _GPUTPerCycle;
-        node.pricing.CPUTtPerCycle = _CPUTtPerCycle;
 
         nodeCount += 1;
     }
