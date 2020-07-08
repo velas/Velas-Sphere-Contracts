@@ -20,7 +20,6 @@ var (
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
-	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
@@ -28,10 +27,10 @@ var (
 )
 
 // EthdepositcontractABI is the input ABI used to generate the binding from.
-const EthdepositcontractABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_node\",\"type\":\"address\"}],\"name\":\"banNode\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_keepPerByte\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_writePerByte\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_GPUTPerCycle\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_CPUTtPerCycle\",\"type\":\"uint256\"}],\"name\":\"proposePricing\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_pull\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_places\",\"type\":\"uint256\"}],\"name\":\"depositWithNodes\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_pull\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_places\",\"type\":\"uint256\"}],\"name\":\"changePool\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\"}],\"name\":\"openInvoice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"createInvoice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"staking_addr\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"mining_addr\",\"type\":\"address\"}],\"name\":\"registerNode\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_keepPerByte\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_writePerByte\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_GPUTPerCycle\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_CPUTtPerCycle\",\"type\":\"uint256\"}],\"name\":\"changeNodePricing\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"withdraw\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"old_addr\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"new_addr\",\"type\":\"address\"}],\"name\":\"changeMiningAddr\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+const EthdepositcontractABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"constant\":true,\"inputs\":[],\"name\":\"getNodeCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_node\",\"type\":\"address\"}],\"name\":\"banNode\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\"}],\"name\":\"openInvoice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"createInvoice\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"staking_addr\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"mining_addr\",\"type\":\"address\"}],\"name\":\"registerNode\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"withdraw\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"old_addr\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"new_addr\",\"type\":\"address\"}],\"name\":\"changeMiningAddr\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"directory\",\"type\":\"bytes32\"}],\"name\":\"registerDirectory\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"directory\",\"type\":\"bytes32\"}],\"name\":\"increaseDirectoryNonce\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"directory\",\"type\":\"bytes32\"}],\"name\":\"getDirectoryNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
 // EthdepositcontractBin is the compiled bytecode used for deploying new contracts.
-var EthdepositcontractBin = "0x608060405264174876e8006000556032600155600560065534801561002357600080fd5b5060016007600001819055506001600760010181905550600160076002018190555060016007600301819055506000600760040160006101000a81548160ff021916908315150217905550603e600381905550610e15806100856000396000f3fe6080604052600436106100915760003560e01c806388e66a541161005957806388e66a54146102345780638a99c70a146102a55780638e8b45c614610300578063b095853214610338578063e708013f1461039357610091565b80632790fb771461009b5780633296972f146100e05780633faba59e146101395780634f1c58e31461018a57806351cff8d9146101e3575b6100996103f7565b005b3480156100a757600080fd5b506100de600480360360408110156100be57600080fd5b810190808035906020019092919080359060200190929190505050610507565b005b3480156100ec57600080fd5b506101376004803603608081101561010357600080fd5b8101908080359060200190929190803590602001909291908035906020019092919080359060200190929190505050610584565b005b34801561014557600080fd5b506101886004803603602081101561015c57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061061e565b005b34801561019657600080fd5b506101e1600480360360808110156101ad57600080fd5b8101908080359060200190929190803590602001909291908035906020019092919080359060200190929190505050610744565b005b3480156101ef57600080fd5b506102326004803603602081101561020657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506107e0565b005b34801561024057600080fd5b506102a36004803603604081101561025757600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506108ef565b005b3480156102b157600080fd5b506102fe600480360360408110156102c857600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019092919050505061097a565b005b6103366004803603604081101561031657600080fd5b810190808035906020019092919080359060200190929190505050610a31565b005b34801561034457600080fd5b506103916004803603604081101561035b57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190505050610a62565b005b6103f5600480360360408110156103a957600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610c76565b005b6000600f60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002090506000341161044757600080fd5b348160080160008282540192505081905550600015158160090160009054906101000a900460ff16151514156104e757600781600001600082015481600001556001820154816001015560028201548160020155600382015481600301556004820160009054906101000a900460ff168160040160006101000a81548160ff02191690831515021790555090505060016004600082825401925050819055505b60018160090160006101000a81548160ff02191690831515021790555050565b6000600f60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020905081816006016001018190555082816006016000018190555060018160050160006101000a81548160ff021916908315150217905550505050565b6000600f60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020905084816000016000018190555083816000016001018190555082816000016002018190555081816000016003018190555060018160000160040160006101000a81548160ff0219169083151502179055505050505050565b6000600f60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600181600a0160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600101819055506001600e60008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010160008282540192505081905550600654600e60008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002050505050565b6000600d60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600115158160030160009054906101000a900460ff161515146107a957600080fd5b8481600401600001819055508381600401600101819055508281600401600201819055508181600401600301819055505050505050565b6000600d60008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600081600201541161083457600080fd5b8060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc600d60008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600201549081150290604051600060405180830381858888f193505050501580156108e0573d6000803e3d6000fd5b50600081600201819055505050565b6000600d60008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050818160010160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505050565b3373ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16146109b257600080fd5b6000601060008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600081600e015414610a0657600080fd5b81816002018190555060018160030160006101000a81548160ff021916908315150217905550505050565b610a396103f7565b600082148015610a495750600081145b15610a5357610a5e565b610a5d8282610507565b5b5050565b6000600d60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002090508060030160009054906101000a900460ff16610ac057600080fd5b600654600e60008360000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206001015410610b3457600080fd5b6000600f60008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600081600a0160008460000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206001015414610bec57600080fd5b6000601060008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002090508060030160009054906101000a900460ff16610c4a57600080fd5b600181600e01600082825401925050819055508381600d01600082825401925050819055505050505050565b6000600d60008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600015158160030160009054906101000a900460ff16151514610cdb57600080fd5b60018160030160006101000a81548160ff0219169083151502179055506000543414610d0657600080fd5b828160000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550610d51610d80565b816009016001018190555060055481600901600001819055506001600260008282540192505081905550505050565b600080600c600060055481526020019081526020016000209050605e816001015410610db85760016005600082825401925050819055505b600081600101546001901b90506001826001016000828254019250508190555080925050509056fea265627a7a72315820316bd7c63bee38b0744b825ebd54548facfa551db9083bd9b7c8a36958edce1a64736f6c63430005100032"
+var EthdepositcontractBin = "0x608060405264174876e80060005560326001556005805534801561002257600080fd5b50603e600381905550610c628061003a6000396000f3fe6080604052600436106100915760003560e01c80638a99c70a116100595780638a99c70a14610228578063906f014e1461028357806398a8004b146102be578063b0958532146102f9578063e708013f1461035457610091565b806306a3316a1461009b57806339bf397e146100ea5780633faba59e1461011557806351cff8d91461016657806388e66a54146101b7575b6100996103b8565b005b3480156100a757600080fd5b506100d4600480360360208110156100be57600080fd5b810190808035906020019092919050505061046a565b6040518082815260200191505060405180910390f35b3480156100f657600080fd5b506100ff6104c4565b6040518082815260200191505060405180910390f35b34801561012157600080fd5b506101646004803603602081101561013857600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506104ce565b005b34801561017257600080fd5b506101b56004803603602081101561018957600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506105f4565b005b3480156101c357600080fd5b50610226600480360360408110156101da57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610703565b005b34801561023457600080fd5b506102816004803603604081101561024b57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019092919050505061078e565b005b34801561028f57600080fd5b506102bc600480360360208110156102a657600080fd5b8101908080359060200190929190505050610834565b005b3480156102ca57600080fd5b506102f7600480360360208110156102e157600080fd5b810190808035906020019092919050505061088d565b005b34801561030557600080fd5b506103526004803603604081101561031c57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190505050610943565b005b6103b66004803603604081101561036a57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610b44565b005b6000600860003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002090506000341161040857600080fd5b348160000160008282540192505081905550600015158160010160009054906101000a900460ff161515141561044a5760016004600082825401925050819055505b60018160010160006101000a81548160ff02191690831515021790555050565b6000600a60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000838152602001908152602001600020549050919050565b6000600254905090565b6000600860003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020905060018160020160008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600101819055506001600760008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060010160008282540192505081905550600554600760008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002050505050565b6000600660008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600081600201541161064857600080fd5b8060000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc600660008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600201549081150290604051600060405180830381858888f193505050501580156106f4573d6000803e3d6000fd5b50600081600201819055505050565b6000600660008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050818160010160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505050565b3373ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16146107c657600080fd5b6000600960008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020905081816000018190555060018160010160006101000a81548160ff021916908315150217905550505050565b6000600a60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008381526020019081526020016000208190555050565b6000600a60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000838152602001908152602001600020549050808060010191505080600a60003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000848152602001908152602001600020819055505050565b6000600660003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002090508060030160009054906101000a900460ff166109a157600080fd5b600554600760008360000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206001015410610a1557600080fd5b6000600860008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020905060008160020160008460000160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206001015414610acd57600080fd5b6000600960008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002090508060010160009054906101000a900460ff16610b2b57600080fd5b8381600201600082825401925050819055505050505050565b6000600660008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000209050600015158160030160009054906101000a900460ff16151514610ba957600080fd5b60018160030160006101000a81548160ff0219169083151502179055506000543414610bd457600080fd5b828160000160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550600160026000828254019250508190555050505056fea265627a7a72315820694a7536e4c51b72badf9919658677a077fb2c5070c69a6c73abdfec5c81624964736f6c63430005100032"
 
 // DeployEthdepositcontract deploys a new Ethereum contract, binding an instance of Ethdepositcontract to it.
 func DeployEthdepositcontract(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Ethdepositcontract, error) {
@@ -189,6 +188,58 @@ func (_Ethdepositcontract *EthdepositcontractTransactorRaw) Transact(opts *bind.
 	return _Ethdepositcontract.Contract.contract.Transact(opts, method, params...)
 }
 
+// GetDirectoryNonce is a free data retrieval call binding the contract method 0x06a3316a.
+//
+// Solidity: function getDirectoryNonce(bytes32 directory) view returns(uint256)
+func (_Ethdepositcontract *EthdepositcontractCaller) GetDirectoryNonce(opts *bind.CallOpts, directory [32]byte) (*big.Int, error) {
+	var (
+		ret0 = new(*big.Int)
+	)
+	out := ret0
+	err := _Ethdepositcontract.contract.Call(opts, out, "getDirectoryNonce", directory)
+	return *ret0, err
+}
+
+// GetDirectoryNonce is a free data retrieval call binding the contract method 0x06a3316a.
+//
+// Solidity: function getDirectoryNonce(bytes32 directory) view returns(uint256)
+func (_Ethdepositcontract *EthdepositcontractSession) GetDirectoryNonce(directory [32]byte) (*big.Int, error) {
+	return _Ethdepositcontract.Contract.GetDirectoryNonce(&_Ethdepositcontract.CallOpts, directory)
+}
+
+// GetDirectoryNonce is a free data retrieval call binding the contract method 0x06a3316a.
+//
+// Solidity: function getDirectoryNonce(bytes32 directory) view returns(uint256)
+func (_Ethdepositcontract *EthdepositcontractCallerSession) GetDirectoryNonce(directory [32]byte) (*big.Int, error) {
+	return _Ethdepositcontract.Contract.GetDirectoryNonce(&_Ethdepositcontract.CallOpts, directory)
+}
+
+// GetNodeCount is a free data retrieval call binding the contract method 0x39bf397e.
+//
+// Solidity: function getNodeCount() view returns(uint256)
+func (_Ethdepositcontract *EthdepositcontractCaller) GetNodeCount(opts *bind.CallOpts) (*big.Int, error) {
+	var (
+		ret0 = new(*big.Int)
+	)
+	out := ret0
+	err := _Ethdepositcontract.contract.Call(opts, out, "getNodeCount")
+	return *ret0, err
+}
+
+// GetNodeCount is a free data retrieval call binding the contract method 0x39bf397e.
+//
+// Solidity: function getNodeCount() view returns(uint256)
+func (_Ethdepositcontract *EthdepositcontractSession) GetNodeCount() (*big.Int, error) {
+	return _Ethdepositcontract.Contract.GetNodeCount(&_Ethdepositcontract.CallOpts)
+}
+
+// GetNodeCount is a free data retrieval call binding the contract method 0x39bf397e.
+//
+// Solidity: function getNodeCount() view returns(uint256)
+func (_Ethdepositcontract *EthdepositcontractCallerSession) GetNodeCount() (*big.Int, error) {
+	return _Ethdepositcontract.Contract.GetNodeCount(&_Ethdepositcontract.CallOpts)
+}
+
 // BanNode is a paid mutator transaction binding the contract method 0x3faba59e.
 //
 // Solidity: function banNode(address _node) returns()
@@ -231,48 +282,6 @@ func (_Ethdepositcontract *EthdepositcontractTransactorSession) ChangeMiningAddr
 	return _Ethdepositcontract.Contract.ChangeMiningAddr(&_Ethdepositcontract.TransactOpts, old_addr, new_addr)
 }
 
-// ChangeNodePricing is a paid mutator transaction binding the contract method 0x4f1c58e3.
-//
-// Solidity: function changeNodePricing(uint256 _keepPerByte, uint256 _writePerByte, uint256 _GPUTPerCycle, uint256 _CPUTtPerCycle) returns()
-func (_Ethdepositcontract *EthdepositcontractTransactor) ChangeNodePricing(opts *bind.TransactOpts, _keepPerByte *big.Int, _writePerByte *big.Int, _GPUTPerCycle *big.Int, _CPUTtPerCycle *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.contract.Transact(opts, "changeNodePricing", _keepPerByte, _writePerByte, _GPUTPerCycle, _CPUTtPerCycle)
-}
-
-// ChangeNodePricing is a paid mutator transaction binding the contract method 0x4f1c58e3.
-//
-// Solidity: function changeNodePricing(uint256 _keepPerByte, uint256 _writePerByte, uint256 _GPUTPerCycle, uint256 _CPUTtPerCycle) returns()
-func (_Ethdepositcontract *EthdepositcontractSession) ChangeNodePricing(_keepPerByte *big.Int, _writePerByte *big.Int, _GPUTPerCycle *big.Int, _CPUTtPerCycle *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.Contract.ChangeNodePricing(&_Ethdepositcontract.TransactOpts, _keepPerByte, _writePerByte, _GPUTPerCycle, _CPUTtPerCycle)
-}
-
-// ChangeNodePricing is a paid mutator transaction binding the contract method 0x4f1c58e3.
-//
-// Solidity: function changeNodePricing(uint256 _keepPerByte, uint256 _writePerByte, uint256 _GPUTPerCycle, uint256 _CPUTtPerCycle) returns()
-func (_Ethdepositcontract *EthdepositcontractTransactorSession) ChangeNodePricing(_keepPerByte *big.Int, _writePerByte *big.Int, _GPUTPerCycle *big.Int, _CPUTtPerCycle *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.Contract.ChangeNodePricing(&_Ethdepositcontract.TransactOpts, _keepPerByte, _writePerByte, _GPUTPerCycle, _CPUTtPerCycle)
-}
-
-// ChangePool is a paid mutator transaction binding the contract method 0x2790fb77.
-//
-// Solidity: function changePool(uint256 _pull, uint256 _places) returns()
-func (_Ethdepositcontract *EthdepositcontractTransactor) ChangePool(opts *bind.TransactOpts, _pull *big.Int, _places *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.contract.Transact(opts, "changePool", _pull, _places)
-}
-
-// ChangePool is a paid mutator transaction binding the contract method 0x2790fb77.
-//
-// Solidity: function changePool(uint256 _pull, uint256 _places) returns()
-func (_Ethdepositcontract *EthdepositcontractSession) ChangePool(_pull *big.Int, _places *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.Contract.ChangePool(&_Ethdepositcontract.TransactOpts, _pull, _places)
-}
-
-// ChangePool is a paid mutator transaction binding the contract method 0x2790fb77.
-//
-// Solidity: function changePool(uint256 _pull, uint256 _places) returns()
-func (_Ethdepositcontract *EthdepositcontractTransactorSession) ChangePool(_pull *big.Int, _places *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.Contract.ChangePool(&_Ethdepositcontract.TransactOpts, _pull, _places)
-}
-
 // CreateInvoice is a paid mutator transaction binding the contract method 0xb0958532.
 //
 // Solidity: function createInvoice(address user, uint256 price) returns()
@@ -294,25 +303,25 @@ func (_Ethdepositcontract *EthdepositcontractTransactorSession) CreateInvoice(us
 	return _Ethdepositcontract.Contract.CreateInvoice(&_Ethdepositcontract.TransactOpts, user, price)
 }
 
-// DepositWithNodes is a paid mutator transaction binding the contract method 0x8e8b45c6.
+// IncreaseDirectoryNonce is a paid mutator transaction binding the contract method 0x98a8004b.
 //
-// Solidity: function depositWithNodes(uint256 _pull, uint256 _places) returns()
-func (_Ethdepositcontract *EthdepositcontractTransactor) DepositWithNodes(opts *bind.TransactOpts, _pull *big.Int, _places *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.contract.Transact(opts, "depositWithNodes", _pull, _places)
+// Solidity: function increaseDirectoryNonce(bytes32 directory) returns()
+func (_Ethdepositcontract *EthdepositcontractTransactor) IncreaseDirectoryNonce(opts *bind.TransactOpts, directory [32]byte) (*types.Transaction, error) {
+	return _Ethdepositcontract.contract.Transact(opts, "increaseDirectoryNonce", directory)
 }
 
-// DepositWithNodes is a paid mutator transaction binding the contract method 0x8e8b45c6.
+// IncreaseDirectoryNonce is a paid mutator transaction binding the contract method 0x98a8004b.
 //
-// Solidity: function depositWithNodes(uint256 _pull, uint256 _places) returns()
-func (_Ethdepositcontract *EthdepositcontractSession) DepositWithNodes(_pull *big.Int, _places *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.Contract.DepositWithNodes(&_Ethdepositcontract.TransactOpts, _pull, _places)
+// Solidity: function increaseDirectoryNonce(bytes32 directory) returns()
+func (_Ethdepositcontract *EthdepositcontractSession) IncreaseDirectoryNonce(directory [32]byte) (*types.Transaction, error) {
+	return _Ethdepositcontract.Contract.IncreaseDirectoryNonce(&_Ethdepositcontract.TransactOpts, directory)
 }
 
-// DepositWithNodes is a paid mutator transaction binding the contract method 0x8e8b45c6.
+// IncreaseDirectoryNonce is a paid mutator transaction binding the contract method 0x98a8004b.
 //
-// Solidity: function depositWithNodes(uint256 _pull, uint256 _places) returns()
-func (_Ethdepositcontract *EthdepositcontractTransactorSession) DepositWithNodes(_pull *big.Int, _places *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.Contract.DepositWithNodes(&_Ethdepositcontract.TransactOpts, _pull, _places)
+// Solidity: function increaseDirectoryNonce(bytes32 directory) returns()
+func (_Ethdepositcontract *EthdepositcontractTransactorSession) IncreaseDirectoryNonce(directory [32]byte) (*types.Transaction, error) {
+	return _Ethdepositcontract.Contract.IncreaseDirectoryNonce(&_Ethdepositcontract.TransactOpts, directory)
 }
 
 // OpenInvoice is a paid mutator transaction binding the contract method 0x8a99c70a.
@@ -336,44 +345,44 @@ func (_Ethdepositcontract *EthdepositcontractTransactorSession) OpenInvoice(addr
 	return _Ethdepositcontract.Contract.OpenInvoice(&_Ethdepositcontract.TransactOpts, addr, deadline)
 }
 
-// ProposePricing is a paid mutator transaction binding the contract method 0x3296972f.
+// RegisterDirectory is a paid mutator transaction binding the contract method 0x906f014e.
 //
-// Solidity: function proposePricing(uint256 _keepPerByte, uint256 _writePerByte, uint256 _GPUTPerCycle, uint256 _CPUTtPerCycle) returns()
-func (_Ethdepositcontract *EthdepositcontractTransactor) ProposePricing(opts *bind.TransactOpts, _keepPerByte *big.Int, _writePerByte *big.Int, _GPUTPerCycle *big.Int, _CPUTtPerCycle *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.contract.Transact(opts, "proposePricing", _keepPerByte, _writePerByte, _GPUTPerCycle, _CPUTtPerCycle)
+// Solidity: function registerDirectory(bytes32 directory) returns()
+func (_Ethdepositcontract *EthdepositcontractTransactor) RegisterDirectory(opts *bind.TransactOpts, directory [32]byte) (*types.Transaction, error) {
+	return _Ethdepositcontract.contract.Transact(opts, "registerDirectory", directory)
 }
 
-// ProposePricing is a paid mutator transaction binding the contract method 0x3296972f.
+// RegisterDirectory is a paid mutator transaction binding the contract method 0x906f014e.
 //
-// Solidity: function proposePricing(uint256 _keepPerByte, uint256 _writePerByte, uint256 _GPUTPerCycle, uint256 _CPUTtPerCycle) returns()
-func (_Ethdepositcontract *EthdepositcontractSession) ProposePricing(_keepPerByte *big.Int, _writePerByte *big.Int, _GPUTPerCycle *big.Int, _CPUTtPerCycle *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.Contract.ProposePricing(&_Ethdepositcontract.TransactOpts, _keepPerByte, _writePerByte, _GPUTPerCycle, _CPUTtPerCycle)
+// Solidity: function registerDirectory(bytes32 directory) returns()
+func (_Ethdepositcontract *EthdepositcontractSession) RegisterDirectory(directory [32]byte) (*types.Transaction, error) {
+	return _Ethdepositcontract.Contract.RegisterDirectory(&_Ethdepositcontract.TransactOpts, directory)
 }
 
-// ProposePricing is a paid mutator transaction binding the contract method 0x3296972f.
+// RegisterDirectory is a paid mutator transaction binding the contract method 0x906f014e.
 //
-// Solidity: function proposePricing(uint256 _keepPerByte, uint256 _writePerByte, uint256 _GPUTPerCycle, uint256 _CPUTtPerCycle) returns()
-func (_Ethdepositcontract *EthdepositcontractTransactorSession) ProposePricing(_keepPerByte *big.Int, _writePerByte *big.Int, _GPUTPerCycle *big.Int, _CPUTtPerCycle *big.Int) (*types.Transaction, error) {
-	return _Ethdepositcontract.Contract.ProposePricing(&_Ethdepositcontract.TransactOpts, _keepPerByte, _writePerByte, _GPUTPerCycle, _CPUTtPerCycle)
+// Solidity: function registerDirectory(bytes32 directory) returns()
+func (_Ethdepositcontract *EthdepositcontractTransactorSession) RegisterDirectory(directory [32]byte) (*types.Transaction, error) {
+	return _Ethdepositcontract.Contract.RegisterDirectory(&_Ethdepositcontract.TransactOpts, directory)
 }
 
 // RegisterNode is a paid mutator transaction binding the contract method 0xe708013f.
 //
-// Solidity: function registerNode(address staking_addr, address mining_addr) returns()
+// Solidity: function registerNode(address staking_addr, address mining_addr) payable returns()
 func (_Ethdepositcontract *EthdepositcontractTransactor) RegisterNode(opts *bind.TransactOpts, staking_addr common.Address, mining_addr common.Address) (*types.Transaction, error) {
 	return _Ethdepositcontract.contract.Transact(opts, "registerNode", staking_addr, mining_addr)
 }
 
 // RegisterNode is a paid mutator transaction binding the contract method 0xe708013f.
 //
-// Solidity: function registerNode(address staking_addr, address mining_addr) returns()
+// Solidity: function registerNode(address staking_addr, address mining_addr) payable returns()
 func (_Ethdepositcontract *EthdepositcontractSession) RegisterNode(staking_addr common.Address, mining_addr common.Address) (*types.Transaction, error) {
 	return _Ethdepositcontract.Contract.RegisterNode(&_Ethdepositcontract.TransactOpts, staking_addr, mining_addr)
 }
 
 // RegisterNode is a paid mutator transaction binding the contract method 0xe708013f.
 //
-// Solidity: function registerNode(address staking_addr, address mining_addr) returns()
+// Solidity: function registerNode(address staking_addr, address mining_addr) payable returns()
 func (_Ethdepositcontract *EthdepositcontractTransactorSession) RegisterNode(staking_addr common.Address, mining_addr common.Address) (*types.Transaction, error) {
 	return _Ethdepositcontract.Contract.RegisterNode(&_Ethdepositcontract.TransactOpts, staking_addr, mining_addr)
 }
@@ -397,4 +406,25 @@ func (_Ethdepositcontract *EthdepositcontractSession) Withdraw(addr common.Addre
 // Solidity: function withdraw(address addr) returns()
 func (_Ethdepositcontract *EthdepositcontractTransactorSession) Withdraw(addr common.Address) (*types.Transaction, error) {
 	return _Ethdepositcontract.Contract.Withdraw(&_Ethdepositcontract.TransactOpts, addr)
+}
+
+// Fallback is a paid mutator transaction binding the contract fallback function.
+//
+// Solidity: fallback() payable returns()
+func (_Ethdepositcontract *EthdepositcontractTransactor) Fallback(opts *bind.TransactOpts, calldata []byte) (*types.Transaction, error) {
+	return _Ethdepositcontract.contract.RawTransact(opts, calldata)
+}
+
+// Fallback is a paid mutator transaction binding the contract fallback function.
+//
+// Solidity: fallback() payable returns()
+func (_Ethdepositcontract *EthdepositcontractSession) Fallback(calldata []byte) (*types.Transaction, error) {
+	return _Ethdepositcontract.Contract.Fallback(&_Ethdepositcontract.TransactOpts, calldata)
+}
+
+// Fallback is a paid mutator transaction binding the contract fallback function.
+//
+// Solidity: fallback() payable returns()
+func (_Ethdepositcontract *EthdepositcontractTransactorSession) Fallback(calldata []byte) (*types.Transaction, error) {
+	return _Ethdepositcontract.Contract.Fallback(&_Ethdepositcontract.TransactOpts, calldata)
 }
