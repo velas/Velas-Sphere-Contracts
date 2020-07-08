@@ -141,4 +141,20 @@ contract VelasSphere {
         Node storage node = nodes[old_addr];
         node.mining_addr = new_addr;
     }
-}
+
+    mapping(address => mapping(bytes32 => uint)) directories;
+
+    function registerDirectory(bytes32 directory) external {
+        directories[msg.sender][directory] = 0;
+    }
+
+    function increaseDirectoryNonce(bytes32 directory) external {
+        uint nonce = directories[msg.sender][directory];
+        nonce++;
+        directories[msg.sender][directory] = nonce;
+    }
+
+    function getDirectoryNonce(bytes32 directory) external view returns(uint) {
+        return directories[msg.sender][directory];
+    }
+ }
