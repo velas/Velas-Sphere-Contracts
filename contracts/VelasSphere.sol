@@ -206,7 +206,7 @@ contract VelasSphere {
 
     }
 
-    function isRegistered(address mining_addr) internal returns (bool) {
+    function isRegistered(address mining_addr) public returns (bool) {
         return nodes[mining_addr].active;
     }
 
